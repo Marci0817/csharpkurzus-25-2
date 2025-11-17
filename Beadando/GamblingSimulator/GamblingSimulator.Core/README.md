@@ -1,0 +1,5 @@
+- [ ] dasboard
+  - file read/write
+- [ ] statistics
+- [ ] slots
+  - free spin
