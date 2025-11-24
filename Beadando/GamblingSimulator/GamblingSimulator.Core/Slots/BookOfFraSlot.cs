@@ -2,7 +2,7 @@ using GamblingSimulator.Core.Models;
 
 namespace GamblingSimulator.Core.Slots;
 
-public class BookOfFraSlot : ISlot
+internal class BookOfFraSlot : ISlot
 {
     private readonly Dictionary<string, long> _symbols = new()
     {
@@ -24,7 +24,9 @@ public class BookOfFraSlot : ISlot
         { 2, 5 },
         { 3, 50 },
     };
-    
+
+    public string Name { get => "Book of Fra"; }
+
     public SlotResult Spin(long bet, int length)
     {
         string[] row = [RandomSymbol(), RandomSymbol(), RandomSymbol()];
