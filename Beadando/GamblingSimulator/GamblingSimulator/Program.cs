@@ -1,14 +1,5 @@
-﻿using GamblingSimulator.Core;
-using GamblingSimulator.Core.Slots;
-using GamblingSimulator.Core.View;
+﻿using GamblingSimulator.UI;
 
-ISlot slot = new BookOfFraSlot();
+CasinoGame game = new CasinoGame();
 
-ISlotRenderer renderer = new SlotRenderer();
-
-var oriasi = slot.Spin(10, 20);
-
-Console.WriteLine(string.Join(',', oriasi.Row));
-Console.WriteLine(oriasi.Payout);
-
-//renderer.Render(slot.Spin(10, 20));
+game.Start();
