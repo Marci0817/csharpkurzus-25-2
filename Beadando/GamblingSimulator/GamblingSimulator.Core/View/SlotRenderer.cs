@@ -4,7 +4,7 @@ namespace GamblingSimulator.Core.View;
 
 public class SlotRenderer : ISlotRenderer
 {
-    public void Render(IEnumerable<SlotState> states)
+    public void Render(IEnumerable<SlotResult> states)
     {
         foreach (var state in states)
         {

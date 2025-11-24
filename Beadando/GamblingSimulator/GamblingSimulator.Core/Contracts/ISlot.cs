@@ -4,5 +4,5 @@ namespace GamblingSimulator.Core;
 
 public interface ISlot
 {
-    IEnumerable<SlotState> Spin(long bet, int length);
+    SlotResult Spin(long bet, int length);
 }

@@ -1,3 +1,0 @@
-namespace GamblingSimulator.Core.Models;
-
-public record SlotState(string[] Row);

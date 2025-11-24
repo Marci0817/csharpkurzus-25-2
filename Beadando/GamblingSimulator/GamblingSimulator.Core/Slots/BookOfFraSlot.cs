@@ -1,29 +1,54 @@
 using GamblingSimulator.Core.Models;
-using GamblingSimulator.Core.Models.SlotModels;
 
 namespace GamblingSimulator.Core.Slots;
 
 public class BookOfFraSlot : ISlot
 {
-    public List<string> Symbols = new List<string>() { "😁", "♔", "🆘", "A", "B" };
-    public IEnumerable<SlotState> Spin(long bet, int length)
+    private readonly Dictionary<string, long> _symbols = new()
     {
-        for( int i = 0; i < length; i++ )
+        {"🐎", -30},
+        {"🔟", 10},
+        {"K", 10},
+        {"Q", 10},
+        {"J", 10},
+        {"A", 10},
+        {"🐞", 30},
+        {"🗿", 30},
+        {"🗽", 50},
+        {"🤠", 100},
+    };
+
+    private readonly Dictionary<int, long> _multipliers = new()
+    {
+        { 1, 0 },
+        { 2, 5 },
+        { 3, 50 },
+    };
+    
+    public SlotResult Spin(long bet, int length)
+    {
+        string[] row = [RandomSymbol(), RandomSymbol(), RandomSymbol()];
+        var payout = CalculatePayout(bet, row);
+
+        return new SlotResult(row, payout);
+    }
+
+    private long CalculatePayout(long bet, string[] row)
+    {
+        var winnerSymbol = _symbols
+            .Select((x) => new KeyValuePair<string, int>(x.Key, row.Count(symbol => symbol == x.Key)))
+            .FirstOrDefault(x => x.Value >= 2);
+
+        if (winnerSymbol.Key == null)
         {
-            yield return new SlotState([firstSymbol, secondSymbol, threeSymbol]);
+            return 0;
         }
+        return _symbols[winnerSymbol.Key] * _multipliers[winnerSymbol.Value] * bet;
     }
-
-    private double GenerateRandomDouble(double min, double max)
+    
+    private string RandomSymbol()
     {
-        Random random = new Random();
-        return random.NextDouble() * (max - min) + min;
-    }
-
-    private int RandomSymbol()
-    {
-        Random random = new Random();
-
-        return random.Next(1, (int)BookOfFraSymbol.Book);
+        var random = new Random();
+        return _symbols.ElementAt(random.Next(0, _symbols.Count)).Key;
     }
 }
