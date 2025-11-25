@@ -1,23 +1,26 @@
 ﻿using GamblingSimulator.Core;
 using GamblingSimulator.Core.Models;
+using GamblingSimulator.Core.Services;
 using GamblingSimulator.Core.View;
 
 namespace GamblingSimulator.UI
 {
     internal class CasinoGame : ICasinoGame
     {
-        private PlayerState _playerState { get; set; }
+        private PlayerState _playerState;
 
         public IList<ISlot> AvailableSlots { get; private set; }
 
 
         private ISlotRenderer _renderer { get; set; }
+        private ISlotService _slotService { get; set; }
         public CasinoGame()
         {
             _playerState = new PlayerState(0);
 
             AvailableSlots = SlotFactory.RetriveAllSlot();
             _renderer = new SlotRenderer();
+            _slotService = SlotFactory.CreateSlotService();
         }
 
         public void Start()
@@ -27,12 +30,12 @@ namespace GamblingSimulator.UI
             while(isRunning)
             {
                 ShowPlayerState();
-                Console.WriteLine($"\n\n1. list all slots | 2. play slot | 3 break");
+                Console.WriteLine($"\nHELP: Type 1 to list all slots | 2 to play slot | 3 to exit");
                 var input = Console.ReadLine();
+                
                 switch (input)
                 {
                     case "1":
-                        Console.Clear();
                         ListAllSlots();
                         break;
                     case "2":
@@ -55,11 +58,9 @@ namespace GamblingSimulator.UI
             var slot = AvailableSlots[0];
             Console.WriteLine($"------- [ {slot.Name} ] -------");
 
-            var oriasi = slot.Spin(300, 20);
+            long payout = _slotService.Spin(slot, 200, ref _playerState);
 
-            Console.WriteLine(string.Join(',', oriasi.Row));
-            Console.WriteLine(oriasi.Payout);
-            //_renderer.Render(slot.Spin(10, 20));
+            Console.WriteLine($"{payout}");
         }
 
         private void ListAllSlots()
