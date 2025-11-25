@@ -1,4 +1,5 @@
-﻿using GamblingSimulator.Core.Slots;
+﻿using GamblingSimulator.Core.Services;
+using GamblingSimulator.Core.Slots;
 
 namespace GamblingSimulator.Core
 {
@@ -12,6 +13,11 @@ namespace GamblingSimulator.Core
             };
 
             return slots;
+        }
+
+        public static ISlotService CreateSlotService()
+        {
+            return new SlotService();
         }
     }
 }
