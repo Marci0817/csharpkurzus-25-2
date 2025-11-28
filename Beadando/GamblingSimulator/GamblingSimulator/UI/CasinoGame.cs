@@ -1,4 +1,5 @@
 ﻿using GamblingSimulator.Core;
+using GamblingSimulator.Core.Contracts;
 using GamblingSimulator.Core.Models;
 using GamblingSimulator.Core.Services;
 using GamblingSimulator.Core.View;

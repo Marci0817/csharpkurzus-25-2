@@ -1,4 +1,4 @@
-﻿using GamblingSimulator.Core;
+﻿using GamblingSimulator.Core.Contracts;
 
 namespace GamblingSimulator.UI
 {

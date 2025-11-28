@@ -1,6 +1,6 @@
 using GamblingSimulator.Core.Models;
 
-namespace GamblingSimulator.Core;
+namespace GamblingSimulator.Core.Contracts;
 
 public interface ISlotRenderer
 {

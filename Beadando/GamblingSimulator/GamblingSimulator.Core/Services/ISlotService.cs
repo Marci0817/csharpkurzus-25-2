@@ -1,4 +1,5 @@
-﻿using GamblingSimulator.Core.Models;
+﻿using GamblingSimulator.Core.Contracts;
+using GamblingSimulator.Core.Models;
 
 namespace GamblingSimulator.Core.Services
 {
