@@ -2,6 +2,8 @@
 using GamblingSimulator.Core.Models;
 using GamblingSimulator.Core.Services;
 using GamblingSimulator.Core.View;
+using GamblingSimulator.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace GamblingSimulator.UI
 {
@@ -21,59 +23,88 @@ namespace GamblingSimulator.UI
             AvailableSlots = SlotFactory.RetriveAllSlot();
             _renderer = new SlotRenderer();
             _slotService = SlotFactory.CreateSlotService();
+
+            _slotInteractions = new Dictionary<int, Interaction>
+            {
+                { 1, new Interaction("Spin", SpinSlot) },
+                { 2, new Interaction("Increase Bet", IncreaseBet) },
+                { 3, new Interaction("Decrease Bet", DecreaseBet) }
+            };
         }
+        private int _slotChoice;
+        private Dictionary<int, Interaction> _slotInteractions;
+        private int _betAmount = 200;
 
         public void Start()
         {
             bool isRunning = true;
+            Console.WriteLine($"Elérhető slotok:");
+            for ( int i = 0; i < AvailableSlots.Count; i++)
+            {
+                Console.WriteLine($"{i + 1} - {AvailableSlots[i].Name}");
+            }
+            Console.WriteLine("Kérem válasszon egy slotot a fenti listából (szám alapján):");
 
-            while(isRunning)
+
+            var slotInput = Console.ReadLine();
+           
+            while(!int.TryParse(slotInput, out _slotChoice))
+            {
+                Console.WriteLine("Érvénytelen slot, egy számot írjon be:");
+                slotInput = Console.ReadLine();
+            }
+            Console.Clear();
+            while (isRunning)
             {
                 ShowPlayerState();
-                Console.WriteLine($"\nHELP: Type 1 to list all slots | 2 to play slot | 3 to exit");
-                var input = Console.ReadLine();
-                
-                switch (input)
+                foreach (var interaction in _slotInteractions)
                 {
-                    case "1":
-                        ListAllSlots();
-                        break;
-                    case "2":
-                        Console.Clear();
-                        HandleSlotGame();
-                        break;
-                    case "3":
-                        isRunning = false;
-                        break;
-                    default:
-                        Console.WriteLine("Invalid option. Please try again.");
-                        break;
+                    Console.WriteLine($"{interaction.Key}. {interaction.Value.Name}");
                 }
+                var input = Console.ReadLine();
+
+                int interactionChoice;
+                while (!int.TryParse(input, out interactionChoice))
+                {
+                    Console.WriteLine("Érvénytelen interakció, egy számot írjon be:");
+                    input = Console.ReadLine();
+                }
+                Console.Clear();
+                Interaction? selectedInteraction; 
+
+                _slotInteractions.TryGetValue(interactionChoice, out selectedInteraction);
+
+                if(selectedInteraction is not null)
+                {
+                    selectedInteraction.Method();
+                }
+
             }
             Console.WriteLine("Viszlát! Vissza várjuk!");
         }
 
-        private void HandleSlotGame()
+        private void SpinSlot()
         {
-            var slot = AvailableSlots[0];
-            Console.WriteLine($"------- [ {slot.Name} ] -------");
-
-            long payout = _slotService.Spin(slot, 200, ref _playerState);
-
-            Console.WriteLine($"{payout}");
+            long payout = _slotService.Spin(AvailableSlots[_slotChoice-1], _betAmount, ref _playerState);
         }
 
-        private void ListAllSlots()
+        private void IncreaseBet()
         {
-            for (int i = 0; i < AvailableSlots.Count; i++)
+            _betAmount += 100;
+        }
+
+        private void DecreaseBet()
+        {
+            if (_betAmount - 100 >= 0)
             {
-                Console.WriteLine($"{i + 1}. {AvailableSlots[i].Name}");
+                _betAmount -= 100;
             }
         }
 
         private void ShowPlayerState()
         {
-            Console.WriteLine($"----- Welcome {_playerState.Name} ------ | Balance: {_playerState.Balance} HUF | {DateTime.UtcNow}");
+            Console.WriteLine($"----- Üdv {_playerState.Name} ------ | Egyenleg: {_playerState.Balance} HUF | {DateTime.UtcNow}");
+            Console.WriteLine($"Jelenlegi tét: {_betAmount} HUF");
         }
     }
 }

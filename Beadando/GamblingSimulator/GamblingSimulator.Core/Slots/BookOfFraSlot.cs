@@ -6,7 +6,6 @@ internal class BookOfFraSlot : ISlot
 {
     private readonly Dictionary<string, long> _symbols = new()
     {
-        {"🐎", -30},
         {"🔟", 10},
         {"K", 10},
         {"Q", 10},
