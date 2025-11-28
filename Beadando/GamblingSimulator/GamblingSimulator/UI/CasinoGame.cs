@@ -1,7 +1,7 @@
 ﻿using GamblingSimulator.Core;
 using GamblingSimulator.Core.Contracts;
-using GamblingSimulator.Core.Models;
 using GamblingSimulator.Core.Services;
+using GamblingSimulator.Core.Storage;
 using GamblingSimulator.Core.View;
 using GamblingSimulator.Models;
 
@@ -9,16 +9,15 @@ namespace GamblingSimulator.UI
 {
     internal class CasinoGame : ICasinoGame
     {
-        private PlayerState _playerState;
+        private readonly ISlotRepository _repository;
+        private readonly ISlotRenderer _renderer;
+        private readonly ISlotService _slotService;
 
         public IList<ISlot> AvailableSlots { get; private set; }
 
-        private ISlotRenderer _renderer { get; set; }
-        private ISlotService _slotService { get; set; }
-
         public CasinoGame()
         {
-            _playerState = new PlayerState();
+            _repository = new JsonSlotRepository("gambling_data.json");
 
             AvailableSlots = SlotFactory.RetriveAllSlot();
             _renderer = new SlotRenderer();
@@ -85,7 +84,7 @@ namespace GamblingSimulator.UI
             long payout = _slotService.Spin(
                 AvailableSlots[_slotChoice - 1],
                 _betAmount,
-                _playerState
+                _repository
             );
         }
 
@@ -105,7 +104,7 @@ namespace GamblingSimulator.UI
         private void ShowPlayerState()
         {
             Console.WriteLine(
-                $"----- Üdv {_playerState.Name} ------ | Egyenleg: {_playerState.Balance} HUF | {DateTime.UtcNow}"
+                $"----- Üdv {_repository.PlayerName} ------ | Egyenleg: {_repository.Balance} HUF | {DateTime.UtcNow}"
             );
             Console.WriteLine($"Jelenlegi tét: {_betAmount} HUF");
         }

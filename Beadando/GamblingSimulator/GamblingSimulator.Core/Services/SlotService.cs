@@ -1,16 +1,15 @@
 ﻿using GamblingSimulator.Core.Contracts;
-using GamblingSimulator.Core.Models;
+using GamblingSimulator.Core.Storage;
 
 namespace GamblingSimulator.Core.Services
 {
     internal class SlotService : ISlotService
     {
-        public long Spin(ISlot slot, int betAmount, PlayerState playerState)
+        public long Spin(ISlot slot, int betAmount, ISlotRepository repository)
         {
             var slotResult = slot.Spin(betAmount, 20);
 
-            playerState.Balance += slotResult.Payout - betAmount;
-            playerState.History.Add(slotResult);
+            repository.RecordSlotResult(slotResult);
 
             return slotResult.Payout;
         }

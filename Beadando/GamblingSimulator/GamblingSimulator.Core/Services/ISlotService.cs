@@ -1,11 +1,10 @@
 ﻿using GamblingSimulator.Core.Contracts;
-using GamblingSimulator.Core.Models;
+using GamblingSimulator.Core.Storage;
 
 namespace GamblingSimulator.Core.Services
 {
     public interface ISlotService
     {
-        long Spin(ISlot slot, int betAmount, PlayerState playerState);
+        long Spin(ISlot slot, int betAmount, ISlotRepository slotRepository);
     }
 }
-
