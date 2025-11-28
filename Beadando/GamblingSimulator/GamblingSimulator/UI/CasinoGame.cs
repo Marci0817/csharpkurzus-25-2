@@ -3,7 +3,6 @@ using GamblingSimulator.Core.Models;
 using GamblingSimulator.Core.Services;
 using GamblingSimulator.Core.View;
 using GamblingSimulator.Models;
-using System.ComponentModel.DataAnnotations;
 
 namespace GamblingSimulator.UI
 {
@@ -13,12 +12,12 @@ namespace GamblingSimulator.UI
 
         public IList<ISlot> AvailableSlots { get; private set; }
 
-
         private ISlotRenderer _renderer { get; set; }
         private ISlotService _slotService { get; set; }
+
         public CasinoGame()
         {
-            _playerState = new PlayerState(0);
+            _playerState = new PlayerState();
 
             AvailableSlots = SlotFactory.RetriveAllSlot();
             _renderer = new SlotRenderer();
@@ -28,9 +27,10 @@ namespace GamblingSimulator.UI
             {
                 { 1, new Interaction("Spin", SpinSlot) },
                 { 2, new Interaction("Increase Bet", IncreaseBet) },
-                { 3, new Interaction("Decrease Bet", DecreaseBet) }
+                { 3, new Interaction("Decrease Bet", DecreaseBet) },
             };
         }
+
         private int _slotChoice;
         private Dictionary<int, Interaction> _slotInteractions;
         private int _betAmount = 200;
@@ -39,16 +39,15 @@ namespace GamblingSimulator.UI
         {
             bool isRunning = true;
             Console.WriteLine($"Elérhető slotok:");
-            for ( int i = 0; i < AvailableSlots.Count; i++)
+            for (int i = 0; i < AvailableSlots.Count; i++)
             {
                 Console.WriteLine($"{i + 1} - {AvailableSlots[i].Name}");
             }
             Console.WriteLine("Kérem válasszon egy slotot a fenti listából (szám alapján):");
 
-
             var slotInput = Console.ReadLine();
-           
-            while(!int.TryParse(slotInput, out _slotChoice))
+
+            while (!int.TryParse(slotInput, out _slotChoice))
             {
                 Console.WriteLine("Érvénytelen slot, egy számot írjon be:");
                 slotInput = Console.ReadLine();
@@ -70,22 +69,23 @@ namespace GamblingSimulator.UI
                     input = Console.ReadLine();
                 }
                 Console.Clear();
-                Interaction? selectedInteraction; 
 
-                _slotInteractions.TryGetValue(interactionChoice, out selectedInteraction);
-
-                if(selectedInteraction is not null)
-                {
-                    selectedInteraction.Method();
-                }
-
+                _slotInteractions.TryGetValue(
+                    interactionChoice,
+                    out Interaction? selectedInteraction
+                );
+                selectedInteraction?.Method();
             }
             Console.WriteLine("Viszlát! Vissza várjuk!");
         }
 
         private void SpinSlot()
         {
-            long payout = _slotService.Spin(AvailableSlots[_slotChoice-1], _betAmount, ref _playerState);
+            long payout = _slotService.Spin(
+                AvailableSlots[_slotChoice - 1],
+                _betAmount,
+                _playerState
+            );
         }
 
         private void IncreaseBet()
@@ -103,7 +103,9 @@ namespace GamblingSimulator.UI
 
         private void ShowPlayerState()
         {
-            Console.WriteLine($"----- Üdv {_playerState.Name} ------ | Egyenleg: {_playerState.Balance} HUF | {DateTime.UtcNow}");
+            Console.WriteLine(
+                $"----- Üdv {_playerState.Name} ------ | Egyenleg: {_playerState.Balance} HUF | {DateTime.UtcNow}"
+            );
             Console.WriteLine($"Jelenlegi tét: {_betAmount} HUF");
         }
     }

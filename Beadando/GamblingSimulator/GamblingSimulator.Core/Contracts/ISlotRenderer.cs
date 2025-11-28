@@ -6,3 +6,4 @@ public interface ISlotRenderer
 {
     void Render(IEnumerable<SlotResult> states);
 }
+

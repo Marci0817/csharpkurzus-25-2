@@ -10,10 +10,8 @@ public class SlotRenderer : ISlotRenderer
         {
             Thread.Sleep(200);
             Console.Clear();
-            Console.WriteLine($"{state.Row[0]} {state.Row[1]} {state.Row[2]}");
-            
+            Console.WriteLine($"{state.Symbols[0]} {state.Symbols[1]} {state.Symbols[2]}");
         }
     }
-    
-    
 }
+

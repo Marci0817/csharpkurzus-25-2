@@ -7,3 +7,4 @@ namespace GamblingSimulator.UI
         public IList<ISlot> AvailableSlots { get; }
     }
 }
+

@@ -7,10 +7,7 @@ namespace GamblingSimulator.Core
     {
         public static IList<ISlot> RetriveAllSlot()
         {
-            IList<ISlot> slots = new List<ISlot>
-            {
-                new BookOfFraSlot(),
-            };
+            IList<ISlot> slots = new List<ISlot> { new BookOfFraSlot() };
 
             return slots;
         }
