@@ -10,6 +10,7 @@ namespace GamblingSimulator.Core.Services
             var slotResult = slot.Spin(betAmount, 20);
 
             playerState.Balance += slotResult.Payout - betAmount;
+            playerState.History.Add(slotResult);
 
             return slotResult.Payout;
         }
