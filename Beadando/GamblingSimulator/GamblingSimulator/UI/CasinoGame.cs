@@ -81,7 +81,7 @@ namespace GamblingSimulator.UI
 
         private void SpinSlot()
         {
-            long payout = _slotService.Spin(
+            var result = _slotService.Spin(
                 AvailableSlots[_slotChoice - 1],
                 _betAmount,
                 _repository
