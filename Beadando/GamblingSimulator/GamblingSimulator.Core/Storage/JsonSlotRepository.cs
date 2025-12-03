@@ -6,12 +6,13 @@ using GamblingSimulator.Core.Models;
 
 public class JsonSlotRepository : ISlotRepository
 {
+    private const string DefaultHistoryPath = "gambling_data.json";
     private readonly string _filePath;
     private readonly PlayerState _state;
 
     private readonly JsonSerializerOptions _options = new() { WriteIndented = true };
 
-    public JsonSlotRepository(string filePath = "gambling_data.json")
+    public JsonSlotRepository(string filePath = DefaultHistoryPath)
     {
         _filePath = filePath;
         _state = LoadFromFile();

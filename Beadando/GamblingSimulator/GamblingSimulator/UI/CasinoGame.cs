@@ -9,6 +9,7 @@ namespace GamblingSimulator.UI
 {
     internal class CasinoGame : ICasinoGame
     {
+        private const int DefaultBetIncreaseAmount = 100;
         private readonly ISlotRepository _repository;
         private readonly ISlotRenderer _renderer;
         private readonly ISlotService _slotService;
@@ -28,6 +29,7 @@ namespace GamblingSimulator.UI
                 { 1, new Interaction("Spin", SpinSlot) },
                 { 2, new Interaction("Increase Bet", IncreaseBet) },
                 { 3, new Interaction("Decrease Bet", DecreaseBet) },
+                { 4, new Interaction("Enter Bet", EnterBet) }
             };
         }
 
@@ -90,23 +92,36 @@ namespace GamblingSimulator.UI
 
         private void IncreaseBet()
         {
-            _betAmount += 100;
+            _betAmount += DefaultBetIncreaseAmount;
         }
 
         private void DecreaseBet()
         {
-            if (_betAmount - 100 >= 0)
+            if (_betAmount - DefaultBetIncreaseAmount >= 0)
             {
-                _betAmount -= 100;
+                _betAmount -= DefaultBetIncreaseAmount;
             }
+        }
+
+        private void EnterBet()
+        {
+            Console.WriteLine("Adja meg a kívánt tét összegét HUF-ban:");
+            var input = Console.ReadLine();
+            int enteredBet;
+            while (!int.TryParse(input, out enteredBet) || enteredBet < 0 || _repository.Balance < enteredBet)
+            {
+                Console.WriteLine("Érvénytelen tét");
+                input = Console.ReadLine();
+            }
+            _betAmount = enteredBet;
         }
 
         private void ShowPlayerState()
         {
             Console.WriteLine(
-                $"----- Üdv {_repository.PlayerName} ------ | Egyenleg: {_repository.Balance} HUF | {DateTime.UtcNow}"
+                $"----- Üdv {_repository.PlayerName} ------ | Egyenleg: {_repository.Balance.ToString("#,#")} HUF | {DateTime.UtcNow}"
             );
-            Console.WriteLine($"Jelenlegi tét: {_betAmount} HUF");
+            Console.WriteLine($"Jelenlegi tét: {_betAmount.ToString("#,#")} HUF");
         }
     }
 }
