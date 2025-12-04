@@ -52,7 +52,11 @@ namespace GamblingSimulator.UI
 
             var slotInput = Console.ReadLine();
 
-            while (!int.TryParse(slotInput, out _slotChoice))
+            while (
+                !int.TryParse(slotInput, out _slotChoice)
+                || _slotChoice < 1
+                || _slotChoice > AvailableSlots.Count
+            )
             {
                 Console.WriteLine("Érvénytelen slot, egy számot írjon be:");
                 slotInput = Console.ReadLine();
