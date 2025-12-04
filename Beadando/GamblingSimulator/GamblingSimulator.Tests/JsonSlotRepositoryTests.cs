@@ -53,5 +53,22 @@ namespace GamblingSimulator.Tests
             Assert.That(repository.Balance, Is.EqualTo(1400));
             Assert.That(repository.History.Count, Is.EqualTo(1));
         }
+
+        [Test]
+        public void RecordSlotResult_ShouldUpdateBalance_WhenLosing()
+        {
+            var repository = new JsonSlotRepository(_testFilePath);
+            var loseResult = new SlotResult(
+                GameName: "DummySlot",
+                PlayedAt: DateTime.Now,
+                Symbols: ["7", "8", "9"],
+                Bet: 200,
+                Payout: 0
+            );
+            repository.RecordSlotResult(loseResult);
+            // 1000-200+0 = 800
+            Assert.That(repository.Balance, Is.EqualTo(800));
+            Assert.That(repository.History.Count, Is.EqualTo(1));
+        }
     }
 }
