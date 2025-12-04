@@ -30,5 +30,6 @@ public class SlotRenderer : ISlotRenderer
             Thread.Sleep(DefaultAnimationSpeed);
         }
         Console.WriteLine();
+        Console.WriteLine($"Nyeremény: {endResult.Payout:#,0} HUF");
     }
 }
