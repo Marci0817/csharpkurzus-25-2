@@ -32,10 +32,10 @@ namespace GamblingSimulator.UI
 
             _slotInteractions = new Dictionary<int, Interaction>
             {
-                { 1, new Interaction("Spin", SpinSlot) },
-                { 2, new Interaction("Increase Bet", IncreaseBet) },
-                { 3, new Interaction("Decrease Bet", DecreaseBet) },
-                { 4, new Interaction("Enter Bet", EnterBet) },
+                { 1, new Interaction("Pörgetés", SpinSlot) },
+                { 2, new Interaction("Tét növelése", IncreaseBet) },
+                { 3, new Interaction("Tét csökkentése", DecreaseBet) },
+                { 4, new Interaction("Tét megadása", EnterBet) },
                 { 5, new Interaction("Mai összegzés megtekintése", ShowTodaySummary) },
             };
         }
