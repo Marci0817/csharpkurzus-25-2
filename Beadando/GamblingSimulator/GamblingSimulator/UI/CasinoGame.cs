@@ -36,6 +36,7 @@ namespace GamblingSimulator.UI
                 { 2, new Interaction("Increase Bet", IncreaseBet) },
                 { 3, new Interaction("Decrease Bet", DecreaseBet) },
                 { 4, new Interaction("Enter Bet", EnterBet) },
+                { 5, new Interaction("Mai összegzés megtekintése", ShowTodaySummary) },
             };
         }
 
@@ -81,6 +82,26 @@ namespace GamblingSimulator.UI
                 selectedInteraction?.Method();
             }
             Console.WriteLine("Viszlát! Vissza várjuk!");
+        }
+
+        private void ShowTodaySummary()
+        {
+            var today = DateTime.UtcNow.Date;
+            var todayResults = _repository.History.Where(r => r.PlayedAt.Date == today).ToList();
+            if (todayResults.Count == 0)
+            {
+                Console.WriteLine("Ma még nem játszottál.");
+                return;
+            }
+            Console.WriteLine("Mai játékok:");
+            foreach (var result in todayResults)
+            {
+                Console.WriteLine(
+                    $"{result.PlayedAt:HH:mm:ss} - {result.GameName}: Tét: {result.Bet:#,0} HUF, Nyeremény: {result.Payout:#,0} HUF"
+                );
+            }
+            long totalChange = todayResults.Sum(r => r.Payout - r.Bet);
+            Console.WriteLine($"Összesen ma: {totalChange:#,0} HUF");
         }
 
         private void SpinSlot()
