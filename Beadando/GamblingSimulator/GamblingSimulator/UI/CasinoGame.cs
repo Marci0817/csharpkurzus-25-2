@@ -1,5 +1,6 @@
 ﻿using GamblingSimulator.Core;
 using GamblingSimulator.Core.Contracts;
+using GamblingSimulator.Core.Exceptions;
 using GamblingSimulator.Core.Services;
 using GamblingSimulator.Core.Storage;
 using GamblingSimulator.Core.View;
@@ -129,9 +130,9 @@ namespace GamblingSimulator.UI
         private void ShowPlayerState()
         {
             Console.WriteLine(
-                $"----- Üdv {_repository.PlayerName} ------ | Egyenleg: {_repository.Balance:#,#} HUF | {DateTime.UtcNow}"
+                $"----- Üdv {_repository.PlayerName} ------ | Egyenleg: {_repository.Balance:#,0} HUF | {DateTime.UtcNow}"
             );
-            Console.WriteLine($"Jelenlegi tét: {_betAmount:#,#} HUF");
+            Console.WriteLine($"Jelenlegi tét: {_betAmount:#,0} HUF");
         }
     }
 }
