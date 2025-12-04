@@ -14,6 +14,11 @@ namespace GamblingSimulator.UI
         private readonly ISlotRenderer _renderer;
         private readonly ISlotService _slotService;
 
+        private readonly Dictionary<int, Interaction> _slotInteractions;
+
+        private int _slotChoice;
+        private int _betAmount = 200;
+
         public IList<ISlot> AvailableSlots { get; private set; }
 
         public CasinoGame()
@@ -29,13 +34,9 @@ namespace GamblingSimulator.UI
                 { 1, new Interaction("Spin", SpinSlot) },
                 { 2, new Interaction("Increase Bet", IncreaseBet) },
                 { 3, new Interaction("Decrease Bet", DecreaseBet) },
-                { 4, new Interaction("Enter Bet", EnterBet) }
+                { 4, new Interaction("Enter Bet", EnterBet) },
             };
         }
-
-        private int _slotChoice;
-        private Dictionary<int, Interaction> _slotInteractions;
-        private int _betAmount = 200;
 
         public void Start()
         {
@@ -83,11 +84,10 @@ namespace GamblingSimulator.UI
 
         private void SpinSlot()
         {
-            var result = _slotService.Spin(
-                AvailableSlots[_slotChoice - 1],
-                _betAmount,
-                _repository
-            );
+            var slot = AvailableSlots[_slotChoice - 1];
+            var result = _slotService.Spin(slot, _betAmount, _repository);
+
+            _renderer.Render(slot, result, 30);
         }
 
         private void IncreaseBet()
@@ -108,7 +108,11 @@ namespace GamblingSimulator.UI
             Console.WriteLine("Adja meg a kívánt tét összegét HUF-ban:");
             var input = Console.ReadLine();
             int enteredBet;
-            while (!int.TryParse(input, out enteredBet) || enteredBet < 0 || _repository.Balance < enteredBet)
+            while (
+                !int.TryParse(input, out enteredBet)
+                || enteredBet < 0
+                || _repository.Balance < enteredBet
+            )
             {
                 Console.WriteLine("Érvénytelen tét");
                 input = Console.ReadLine();
@@ -119,9 +123,9 @@ namespace GamblingSimulator.UI
         private void ShowPlayerState()
         {
             Console.WriteLine(
-                $"----- Üdv {_repository.PlayerName} ------ | Egyenleg: {_repository.Balance.ToString("#,#")} HUF | {DateTime.UtcNow}"
+                $"----- Üdv {_repository.PlayerName} ------ | Egyenleg: {_repository.Balance:#,#} HUF | {DateTime.UtcNow}"
             );
-            Console.WriteLine($"Jelenlegi tét: {_betAmount.ToString("#,#")} HUF");
+            Console.WriteLine($"Jelenlegi tét: {_betAmount:#,#} HUF");
         }
     }
 }

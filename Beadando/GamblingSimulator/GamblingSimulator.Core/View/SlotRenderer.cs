@@ -5,14 +5,30 @@ namespace GamblingSimulator.Core.View;
 
 public class SlotRenderer : ISlotRenderer
 {
-    public void Render(IEnumerable<SlotResult> states)
+    private const int DefaultAnimationSpeed = 50;
+
+    public void Render(ISlot slot, SlotResult endResult, int animationLength)
     {
-        foreach (var state in states)
+        Random random = new();
+        string[] shownSymbols = new string[endResult.Symbols.Length];
+        int stepSize = animationLength / endResult.Symbols.Length;
+        for (int i = 1; i <= animationLength; i++)
         {
-            Thread.Sleep(200);
-            Console.Clear();
-            Console.WriteLine($"{state.Symbols[0]} {state.Symbols[1]} {state.Symbols[2]}");
+            for (int j = 0; j < shownSymbols.Length; j++)
+            {
+                var symbol =
+                    (i / stepSize) < (j + 1)
+                        ? slot.Symbols[random.Next(0, slot.Symbols.Count)]
+                        : endResult.Symbols[j];
+
+                shownSymbols[j] = symbol.PadLeft(2, ' ');
+            }
+
+            Console.SetCursorPosition(0, Console.CursorTop);
+            Console.Write($"[ {string.Join(" : ", shownSymbols)} ]");
+
+            Thread.Sleep(DefaultAnimationSpeed);
         }
+        Console.WriteLine();
     }
 }
-

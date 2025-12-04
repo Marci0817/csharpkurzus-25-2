@@ -4,6 +4,5 @@ namespace GamblingSimulator.Core.Contracts;
 
 public interface ISlotRenderer
 {
-    void Render(IEnumerable<SlotResult> states);
+    void Render(ISlot slot, SlotResult endResult, int animationLength);
 }
-

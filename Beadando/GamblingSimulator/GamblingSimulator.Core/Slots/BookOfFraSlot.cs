@@ -30,6 +30,11 @@ internal class BookOfFraSlot : ISlot
         get => "Book of Fra";
     }
 
+    public List<string> Symbols
+    {
+        get => [.. _symbols.Keys];
+    }
+
     public SlotResult Spin(long bet, int length)
     {
         string[] row = [RandomSymbol(), RandomSymbol(), RandomSymbol()];
@@ -59,4 +64,3 @@ internal class BookOfFraSlot : ISlot
         return _symbols.ElementAt(random.Next(0, _symbols.Count)).Key;
     }
 }
-
