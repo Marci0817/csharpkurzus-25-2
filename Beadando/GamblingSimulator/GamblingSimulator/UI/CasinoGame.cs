@@ -85,9 +85,15 @@ namespace GamblingSimulator.UI
         private void SpinSlot()
         {
             var slot = AvailableSlots[_slotChoice - 1];
-            var result = _slotService.Spin(slot, _betAmount, _repository);
-
-            _renderer.Render(slot, result, 30);
+            try
+            {
+                var result = _slotService.Spin(slot, _betAmount, _repository);
+                _renderer.Render(slot, result, 30);
+            }
+            catch (InsufficientBalanceException)
+            {
+                Console.WriteLine("Nincs elég egyenleged.");
+            }
         }
 
         private void IncreaseBet()
